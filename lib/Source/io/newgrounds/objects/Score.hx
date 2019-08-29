@@ -14,8 +14,11 @@ typedef RawScoreData = {
 }
 
 /** We don't want to serialize scores since there's a bajillion of them. */
-@:forward
-abstract Score(RawScoreData) from RawScoreData {
+@:forward(
+	tag,
+	user,
+	value
+) abstract Score(RawScoreData) from RawScoreData {
 	
 	/** The value value in the format selected in your scoreboard settings. */
 	public var formatted_value(get, never):String;

@@ -5,20 +5,18 @@ import io.newgrounds.objects.ScoreBoard.RawScoreBoardData;
 
 @:noCompletion
 typedef RawResult<T:ResultBase> = {
-	
 	var component(default, null):String;
 	var echo     (default, null):String;
 	var data     (default, null):T;
-}
-
-abstract Result<T:ResultBase>(RawResult<T>) from RawResult<T> {
+} @:forward(
+	component,
+	echo,
+	data
+) abstract Result<T:ResultBase>(RawResult<T>) from RawResult<T> {
 	
-	public var component(get, never):String; inline function get_component() return this.component;
-	public var echo     (get, never):String; inline function get_echo     () return this.echo;
-	public var data     (get, never):T     ; inline function get_data     () return this.data;
-	public var success  (get, never):Bool  ; inline function get_success  () return data.success;
-	public var debug    (get, never):Bool  ; inline function get_debug    () return data.debug;
-	public var error    (get, never):Error ; inline function get_error    () return data.error;
+	public var success  (get, never):Bool  ; inline function get_success  () return this.data.success;
+	public var debug    (get, never):Bool  ; inline function get_debug    () return this.data.debug;
+	public var error    (get, never):Error ; inline function get_error    () return this.data.error;
 }
 
 typedef ResultBase = {
@@ -35,10 +33,13 @@ typedef SessionResult = ResultBase & {
 }
 
 @:noCompletion
-typedef RawGetHostResult = ResultBase
-	& { host_approved:Bool }
-@:forward
-abstract GetHostResult(RawGetHostResult) from RawGetHostResult to ResultBase {
+typedef RawGetHostResult = ResultBase & {
+	host_approved:Bool
+} @:forward(
+	component,
+	echo,
+	data
+) abstract GetHostResult(RawGetHostResult) from RawGetHostResult to ResultBase {
 	
 	public var host_approved(get, never):Bool;
 	@:deprecated("Use hostApproved")
@@ -48,10 +49,14 @@ abstract GetHostResult(RawGetHostResult) from RawGetHostResult to ResultBase {
 }
 
 @:noCompletion
-typedef RawGetCurrentVersionResult = ResultBase
-	& { current_version:String, client_deprecated:Bool }
-@:forward
-abstract GetCurrentVersionResult(RawGetCurrentVersionResult) from RawGetCurrentVersionResult to ResultBase {
+typedef RawGetCurrentVersionResult = ResultBase & {
+	current_version:String,
+	client_deprecated:Bool
+} @:forward(
+	component,
+	echo,
+	data
+) abstract GetCurrentVersionResult(RawGetCurrentVersionResult) from RawGetCurrentVersionResult to ResultBase {
 	
 	public var current_version(get, never):String;
 	@:deprecated("Use currentVersion")
@@ -68,10 +73,13 @@ abstract GetCurrentVersionResult(RawGetCurrentVersionResult) from RawGetCurrentV
 }
 
 @:noCompletion
-typedef RawLogEventResult = ResultBase
-	& { event_name:String }
-@:forward
-abstract LogEventResult(RawLogEventResult) from RawLogEventResult to ResultBase {
+typedef RawLogEventResult = ResultBase & {
+	event_name:String
+} @:forward(
+	component,
+	echo,
+	data
+) abstract LogEventResult(RawLogEventResult) from RawLogEventResult to ResultBase {
 	
 	public var event_name(get, never):String;
 	@:deprecated("Use eventName")
@@ -81,10 +89,13 @@ abstract LogEventResult(RawLogEventResult) from RawLogEventResult to ResultBase 
 }
 
 @:noCompletion
-typedef RawGetDateTimeResult = ResultBase
-	& { datetime:String }
-@:forward
-abstract GetDateTimeResult(RawGetDateTimeResult) from RawGetDateTimeResult to ResultBase {
+typedef RawGetDateTimeResult = ResultBase & {
+	datetime:String
+} @:forward(
+	component,
+	echo,
+	data
+) abstract GetDateTimeResult(RawGetDateTimeResult) from RawGetDateTimeResult to ResultBase {
 	
 	public var datetime(get, never):String;
 	@:deprecated("Use dateTime")
@@ -109,10 +120,15 @@ typedef MedalListResult = ResultBase & {
 }
 
 @:noCompletion
-typedef RawMedalUnlockResult = ResultBase
-	& { medal_score:String, medal:RawMedalData }
-@:forward
-abstract MedalUnlockResult(RawMedalUnlockResult) from RawMedalUnlockResult to ResultBase {
+typedef RawMedalUnlockResult = ResultBase & {
+	var medal_score:String;
+	var medal(default, never):RawMedalData;
+} @:forward(
+	component,
+	echo,
+	data,
+	medal
+) abstract MedalUnlockResult(RawMedalUnlockResult) from RawMedalUnlockResult to ResultBase {
 	
 	public var medal_score(get, never):String;
 	@:deprecated("Use medalScore")

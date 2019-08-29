@@ -3,15 +3,12 @@ package io.newgrounds.objects;
 @:noCompletion
 typedef RawErrorData = {
 	
-	message:String,
-	?code  :Int
+	var message(default, never):String;
+	var code   (default, never):Null<Int>;
 }
 
-
+@:forward
 abstract Error(RawErrorData) from RawErrorData {
-	
-	public var code   (get, never):Null<Int>; inline function get_code   () return this.code;
-	public var message(get, never):String   ; inline function get_message() return this.message;
 	
 	inline public function new(message:String, ?code:Int)
 	{
@@ -20,6 +17,6 @@ abstract Error(RawErrorData) from RawErrorData {
 	
 	inline public function toString():String {
 		
-		return (code != null ? '#$code - ' : "") + message;
+		return (this.code != null ? '#${this.code} - ' : "") + this.message;
 	}
 }

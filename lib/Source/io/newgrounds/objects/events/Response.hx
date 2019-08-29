@@ -11,22 +11,23 @@ typedef DebugResponse = {
 }
 
 @:noCompletion
-typedef RawResponse<T:ResultBase> =
-{
-	success:Bool,
-	?error :Error,
-	?debug :DebugResponse,
-	?result:Result<T>,
-	app_id :String
+typedef RawResponse<T:ResultBase> = {
+	
+	var success(default, null):Bool;
+	var error  (default, null):Null<Error>;
+	var debug  (default, null):Null<DebugResponse>;
+	var result (default, null):Null<Result<T>>;
+	var app_id (default, null):String;
 }
 
-abstract Response<T:ResultBase>(RawResponse<T>) {
+@:forward(
+	success,
+	error,
+	debug,
+	result
+) abstract Response<T:ResultBase>(RawResponse<T>) {
 	
-	public var success(get, never):Bool               ; inline function get_success () return this.success;
-	public var error  (get, never):Null<Error>        ; inline function get_error   () return this.error;
-	public var debug  (get, never):Null<DebugResponse>; inline function get_debug   () return this.debug;
-	public var result (get, never):Null<Result<T>>    ; inline function get_result  () return this.result;
-	public var appId  (get, never):String             ; inline function get_appId   () return this.app_id;
+	public var appId(get, never):String; inline function get_appId() return this.app_id;
 	
 	public function new (core:NGLite, reply:String) {
 		
@@ -36,9 +37,9 @@ abstract Response<T:ResultBase>(RawResponse<T>) {
 			this = Json.parse('{"success":false,"error":{"message":"Error parsing reply:\'$reply\' error:\'$e\'","code":0}}');
 		}
 		
-		if (!success)
-			core.logError('Call unseccessful: $error');
-		else if(!result.success)
-			core.logError('${result.component} fail: ${result.error}');
+		if (!this.success)
+			core.logError('Call unseccessful: ${this.error}');
+		else if(!this.result.success)
+			core.logError('${this.result.component} fail: ${this.result.error}');
 	}
 }

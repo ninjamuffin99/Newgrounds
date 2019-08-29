@@ -15,14 +15,16 @@ typedef RawSessionData = {
 	var user        (default, never):User;
 }
 
-@:forward
-abstract Session(RawSessionData) from RawSessionData {
+@:forward(
+	id,
+	expired,
+	remember,
+	user
+) abstract Session(RawSessionData) from RawSessionData {
 	
 	/** If the session has no associated user but is not expired, this property will provide a URL that can be used to sign the user in. */
 	public var passportUrl(get, never):String;
 	inline function get_passportUrl() return this.passport_url;
-	var passport_url(get, never):String;
-	inline function get_passport_url() return this.passport_url;
 	
 	//TODO:desciption
 	public var status(get, never):SessionStatus;
